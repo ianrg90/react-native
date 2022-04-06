@@ -68,6 +68,17 @@ export default function App() {
   );
 }
 
+/*
+Scroll view example
+import {ScrollView} from "react-native"
+
+<View **surrounding container style here**>
+  <ScrollView>
+    {dinamic content here} and item styles if applied
+  </ScrollView>
+</View>
+
+*/
 const styles = StyleSheet.create({
   appContainer: {
     paddingTop: 80,
