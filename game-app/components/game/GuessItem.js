@@ -1,5 +1,4 @@
 import { View, Text, StyleSheet } from "react-native";
-import { backgroundColor } from "react-native/Libraries/Components/View/ReactNativeStyleAttributes";
 import Colors from "../../constants/Colors";
 
 function GuessItem({number, roundIndex}) {
