@@ -1,14 +1,53 @@
+import "react-native-gesture-handler";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Button } from "react-native";
+import { StyleSheet } from "react-native";
 import AppLoading from "expo-app-loading";
 import { useFonts } from "expo-font";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createDrawerNavigator } from "@react-navigation/drawer";
 import CategorieScreen from "./screens/CategorieScreen";
 import MealOverviewScreen from "./screens/MealOverviewScreen";
 import MealDetailsScreen from "./screens/MealDetailsScreen";
+import FavoritesScreen from "./screens/FavoritesScreen";
+import { Ionicons } from "@expo/vector-icons";
 
 const Stack = createNativeStackNavigator();
+const Drawer = createDrawerNavigator();
+
+function DrawerNavigator() {
+  return (
+    <Drawer.Navigator
+      screenOptions={{
+        headerStyle: { backgroundColor: "#351401" },
+        headerTintColor: "white",
+        //contentStyle: { backgroundColor: "#3f2f25" },
+        //Its the equivalent property to change the content color in Drawer navigators
+        sceneContainerStyle: { backgroundColor: "#3f2f25" },
+        drawerContentStyle: { backgroundColor: "#351401" },
+        drawerInactiveTintColor: "white",
+        drawerActiveTintColor: "#351401",
+        drawerActiveBackgroundColor: "#e4baa1",
+      }}
+    >
+      <Drawer.Screen
+        name="Categories"
+        component={CategorieScreen}
+        options={{
+          title: "All categories",
+          drawerIcon: ({ color, size }) => (
+            <Ionicons name="list" color={color} size={size} />
+          ),
+        }}
+      />
+      <Drawer.Screen name="Favorites" component={FavoritesScreen} options={{
+          drawerIcon: ({ color, size }) => (
+            <Ionicons name="star" color={color} size={size} />
+          ),
+        }} />
+    </Drawer.Navigator>
+  );
+}
 
 export default function App() {
   const [isFontsLoaded] = useFonts({
@@ -33,29 +72,15 @@ export default function App() {
           }}
         >
           <Stack.Screen
-            name="MealsCategories"
-            component={CategorieScreen}
-            options={{ title: "Categories" }}
+            name="DrawerScreen"
+            component={DrawerNavigator}
+            options={{ headerShown: false }}
           />
-          <Stack.Screen
-            name="MealsOverview"
-            component={MealOverviewScreen}
-            //{
-            // This approach will work, but check the MealOverview screen to see a better method
-            //options={({ route, navigation }) => {
-            //  return {title: route.params.title}
-            //}}
-            //}
-          />
+          <Stack.Screen name="MealsOverview" component={MealOverviewScreen} />
           <Stack.Screen
             name="MealDetailsScreen"
             component={MealDetailsScreen}
-          //One way to add components to the header ... however if you need it to interact with the screen this won't work
-           // options={{
-           //   headerRight: () => {
-           //     return <Button title="Tap me!" />;
-           //   },
-           // }}
+            options={{ title: "Meal Details" }}
           />
         </Stack.Navigator>
       </NavigationContainer>
