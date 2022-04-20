@@ -2,27 +2,37 @@ import { StyleSheet, View, Image, Text, ScrollView } from "react-native";
 import MealDetails from "../components/MealDetails";
 import Subtitle from "../components/MealDetail/Subtitle";
 import List from "../components/MealDetail/List";
-import { useLayoutEffect } from "react";
+import { useLayoutEffect, useContext } from "react";
+import { FavoritesContext } from "../store/context/favories-context";
 import IconButton from "../components/IconButton";
 
 function MealDetailsScreen({ route, navigation }) {
+  const { addFavorite, ids, removeFavorite } =useContext(FavoritesContext);
   const mealInfo = route.params;
 
-  function headerButtonPressHandler() {
-    console.log("taped");
+ 
+    
+  function favoriteHandler() {
+    if (isMealFavorite) {
+      removeFavorite(mealInfo.id);
+    } else {
+      addFavorite(mealInfo.id);
+    }
   }
+
+  const isMealFavorite = ids.includes(mealInfo.id);
 
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
         <IconButton
-          icon="star"
+          icon= {isMealFavorite ? "star" : "star-outline"}
           color="white"
-          onPress={headerButtonPressHandler}
+          onPress={favoriteHandler}
         />
       ),
     });
-  }, [navigation, headerButtonPressHandler]);
+  }, [navigation, favoriteHandler]);
 
   return (
     <ScrollView style={styles.container}>
