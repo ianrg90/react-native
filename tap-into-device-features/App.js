@@ -42,7 +42,13 @@ export default function App() {
             component={AddFavorites}
             options={{ title: "Add Your Place" }}
           />
-          <Stack.Screen name="Map" component={Map} />
+          <Stack.Screen
+            name="Map"
+            component={Map}
+            options={{
+              title: "Map Preview",
+            }}
+          />
           <Stack.Screen name="Details" component={FavoriteDetails} />
         </Stack.Navigator>
       </NavigationContainer>
