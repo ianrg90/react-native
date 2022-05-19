@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { View, Button, Alert, Image, Text, StyleSheet } from "react-native";
+import { View, Alert, Image, Text, StyleSheet } from "react-native";
 import {
   launchCameraAsync,
   useCameraPermissions,
@@ -8,7 +8,7 @@ import {
 import { Colors } from "../../styles/colors";
 import OutlinedButton from "../UI/OutlinedButton";
 
-function ImagePicker() {
+function ImagePicker({onImageTaken}) {
   //This is neccessay for IOS
   //Android will work only with the lauchCameraAsync
   const [cameraPermissionInfo, requestPermissions] = useCameraPermissions();
@@ -20,6 +20,7 @@ function ImagePicker() {
 
       //return a boolean depending on users choice of allowing or denying
       return response.granted;
+
     }
 
     if (cameraPermissionInfo.status === PermissionStatus.DENIED) {
@@ -36,7 +37,7 @@ function ImagePicker() {
 
   async function takeImageHandler() {
     const hasPermission = await verifyPermissions();
-
+    
     if (!hasPermission) {
       return;
     }
@@ -47,6 +48,7 @@ function ImagePicker() {
       quality: 0.5,
     });
     setPickedImage(image.uri);
+    onImageTaken(image.uri)
   }
 
   return (
@@ -59,7 +61,6 @@ function ImagePicker() {
       </View>
       <OutlinedButton
         icon="camera"
-        
         onPress={takeImageHandler}
       >
         Take photo

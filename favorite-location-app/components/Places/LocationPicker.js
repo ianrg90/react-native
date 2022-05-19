@@ -1,5 +1,12 @@
 import { useState, useEffect } from "react";
-import { View, StyleSheet, Alert, Image, Text } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Alert,
+  Image,
+  Text,
+  ActivityIndicator,
+} from "react-native";
 import {
   useNavigation,
   useRoute,
@@ -12,12 +19,13 @@ import {
   useForegroundPermissions,
   PermissionStatus,
 } from "expo-location";
-import { getMapPreview } from "../../utils/location";
+import { getMapPreview, getAddress } from "../../utils/location";
 
-function LocationPicker() {
+function LocationPicker({ onLocationSet }) {
   const [pickedLocation, setPickedLocation] = useState(null);
   const [locationPermissionInfo, requestPermissions] =
     useForegroundPermissions();
+  const [isLoading, setIsLoading] = useState(false);
   const navigation = useNavigation();
   const route = useRoute();
   //The stack navigator does not run useEffect again because the page is just pushed in front of the stack
@@ -35,6 +43,20 @@ function LocationPicker() {
       setPickedLocation(customPickedLocation);
     }
   }, [isFocused, route]);
+
+  useEffect(() => {
+    async function tranlateToAddress() {
+      if (pickedLocation) {
+        const toAddress = await getAddress(
+          pickedLocation.lat,
+          pickedLocation.long
+        );
+        onLocationSet({...pickedLocation, address: toAddress});
+      }
+    }
+
+    tranlateToAddress();
+  }, [pickedLocation, onLocationSet]);
 
   async function verifyLocPermissions() {
     if (locationPermissionInfo.status === PermissionStatus.UNDETERMINED) {
@@ -55,9 +77,11 @@ function LocationPicker() {
   }
 
   async function locationHandler() {
+    setIsLoading(true);
     const hasPermission = await verifyLocPermissions();
 
     if (!hasPermission) {
+      setIsLoading(false);
       return;
     }
 
@@ -66,6 +90,7 @@ function LocationPicker() {
       lat: location.coords.latitude,
       long: location.coords.longitude,
     });
+    setIsLoading(false);
   }
 
   function pickLocationHandler() {
@@ -75,7 +100,7 @@ function LocationPicker() {
   return (
     <View>
       <View style={styles.mapPreview}>
-        {pickedLocation && (
+        {pickedLocation && !isLoading && (
           <Image
             style={styles.mapImage}
             source={{
@@ -83,7 +108,8 @@ function LocationPicker() {
             }}
           />
         )}
-        {!pickedLocation && <Text>Pick a location</Text>}
+        {!pickedLocation && !isLoading && <Text>Pick a location</Text>}
+        {isLoading && <ActivityIndicator size="large" />}
       </View>
       <View style={styles.buttons}>
         <OutlinedButton icon="location" onPress={locationHandler}>

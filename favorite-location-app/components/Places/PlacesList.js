@@ -3,15 +3,14 @@ import { Colors } from "../../styles/colors";
 import PlaceItem from "./PlaceItem";
 
 function PlacesList({ places }) {
-  if (places && places.lenght > 0) {
+  if (places && places.length > 0) {
     return (
-      <View>
-        <FlatList
-          data={places}
-          key={(item) => item.id}
-          renderItem={({ item }) => <PlaceItem place={item} />}
-        />
-      </View>
+      <FlatList
+        data={places}
+        key={(item) => item.id}
+        renderItem={({item}) => <PlaceItem place={item} />}
+        style = {styles.listContainer}
+      />
     );
   }
 
@@ -25,6 +24,11 @@ function PlacesList({ places }) {
 export default PlacesList;
 
 const styles = StyleSheet.create({
+
+  listContainer: {
+    margin: 24
+  },
+
   fallBackContainer: {
     flex: 1,
     justifyContent: "center",
