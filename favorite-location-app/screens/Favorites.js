@@ -1,24 +1,24 @@
-import { useEffect, useState } from "react"
-import { useIsFocused } from "@react-navigation/native"
-import PlacesList from "../components/Places/PlacesList"
+import { useEffect, useState } from "react";
+import { useIsFocused } from "@react-navigation/native";
+import PlacesList from "../components/Places/PlacesList";
+import { fetchPlaces } from "../utils/database";
 
-function Favorites({route}) {
-  const [loadedPlaces, setLoadedPlaces] = useState([])
-  const isFocused = useIsFocused()
-
-  //If item is alreay in list it wont be added in case user navigates back to this screen without adding a new favorite location
-  const placeIsAlreadyInList = route.params ? loadedPlaces.some(item => item.id === route.params.place.id) : false
+function Favorites() {
+  const [loadedPlaces, setLoadedPlaces] = useState([]);
+  const isFocused = useIsFocused();
 
   useEffect(() => {
-
-    if(isFocused && route.params && !placeIsAlreadyInList){
-      setLoadedPlaces(prevPlaces => [...prevPlaces, route.params.place])
+    async function loadPlaces() {
+      const dbPlacesList = await fetchPlaces();
+      setLoadedPlaces(dbPlacesList)
     }
-  }, [isFocused, route])
 
-  return (
-    <PlacesList places={loadedPlaces} />
-  )
+    if (isFocused) {
+      loadPlaces();
+    }
+  }, [isFocused]);
+
+  return <PlacesList places={loadedPlaces} />;
 }
 
-export default Favorites
+export default Favorites;

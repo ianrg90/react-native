@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -7,10 +8,31 @@ import FavoriteDetails from "./screens/FavoriteDetails";
 import Map from "./screens/Map";
 import IconButton from "./components/UI/IconButton";
 import { Colors } from "./styles/colors";
+import { init } from "./utils/database";
+import AppLoading from "expo-app-loading";
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
+  const [isDBInitialized, setIsDBInitialized] = useState(false);
+
+  useEffect(() => {
+    const initializeDB = async () => {
+      await init();
+      try {
+        setIsDBInitialized(true);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    initializeDB();
+  }, []);
+
+  if (!isDBInitialized) {
+    <AppLoading />;
+  }
+
   return (
     <>
       <StatusBar />

@@ -63,7 +63,7 @@ function ImagePicker({onImageTaken}) {
         icon="camera"
         onPress={takeImageHandler}
       >
-        Take photo
+        Take Photo
       </OutlinedButton>
     </View>
   );

@@ -23,8 +23,7 @@ import { getMapPreview, getAddress } from "../../utils/location";
 
 function LocationPicker({ onLocationSet }) {
   const [pickedLocation, setPickedLocation] = useState(null);
-  const [locationPermissionInfo, requestPermissions] =
-    useForegroundPermissions();
+  const [locationPermissionInfo, requestPermissions] = useForegroundPermissions();
   const [isLoading, setIsLoading] = useState(false);
   const navigation = useNavigation();
   const route = useRoute();
@@ -45,7 +44,7 @@ function LocationPicker({ onLocationSet }) {
   }, [isFocused, route]);
 
   useEffect(() => {
-    async function tranlateToAddress() {
+    async function translateToAddress() {
       if (pickedLocation) {
         const toAddress = await getAddress(
           pickedLocation.lat,
@@ -55,13 +54,12 @@ function LocationPicker({ onLocationSet }) {
       }
     }
 
-    tranlateToAddress();
+    translateToAddress();
   }, [pickedLocation, onLocationSet]);
 
   async function verifyLocPermissions() {
     if (locationPermissionInfo.status === PermissionStatus.UNDETERMINED) {
       const response = await requestPermissions();
-
       return response.granted;
     }
 
@@ -94,7 +92,7 @@ function LocationPicker({ onLocationSet }) {
   }
 
   function pickLocationHandler() {
-    navigation.navigate("Map");
+    navigation.navigate("Map", {displaySaveButton: true});
   }
 
   return (
@@ -113,10 +111,10 @@ function LocationPicker({ onLocationSet }) {
       </View>
       <View style={styles.buttons}>
         <OutlinedButton icon="location" onPress={locationHandler}>
-          Locate user
+          Locate User
         </OutlinedButton>
         <OutlinedButton icon="map" onPress={pickLocationHandler}>
-          Pick a location
+          Pick Location
         </OutlinedButton>
       </View>
     </View>

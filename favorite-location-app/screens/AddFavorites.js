@@ -1,8 +1,10 @@
 import PlaceForm from "../components/Places/PlaceForm";
+import { insertPlace } from "../utils/database";
 
 function AddFavorites({ navigation }) {
-  function createFavoritePlaceHandler(placeData) {
-    navigation.navigate("Favorites", { place: placeData });
+  async function createFavoritePlaceHandler(placeData) {
+    await insertPlace(placeData);
+    navigation.navigate("Favorites");
   }
 
   return <PlaceForm onCreateHandler={createFavoritePlaceHandler} />;

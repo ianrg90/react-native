@@ -2,15 +2,12 @@ import { View, Pressable, StyleSheet, Text } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import {Colors} from "../../styles/colors"
 
-function OutlinedButton({ icon, onPress, children }) {
+function OutlinedButton({ icon, onPress, children}) {
+    
   return (
     <Pressable
       onPress={onPress}
-      style={({ pressed }) => [
-        styles.buttonContainer,
-        pressed && styles.pressed,
-      ]}
-    >
+      style={({ pressed }) => [styles.buttonContainer, pressed && styles.pressed]}>
       <Ionicons name={icon} color={Colors.primary500} size={22} />
       <Text style = {styles.text}>{children}</Text>
     </Pressable>
@@ -38,7 +35,7 @@ const styles = StyleSheet.create({
   text: {
     color: Colors.primary500,
     fontSize: 18,
-    marginLeft: 10
+    marginLeft: 3
     
   }
 });
